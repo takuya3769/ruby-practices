@@ -14,12 +14,14 @@ elsif (MAX_CLUMN * row - MAXIMUM_FILE) == 2
   directory.push(nil)
 end
 
-file_list = directory.each_slice(row).to_a
-files = file_list.transpose
-
-files.each do |list|
-  list.each do |file|
-    print file.to_s.ljust(24)
+def show_directories(directory, row)
+  file_list = directory.each_slice(row).to_a
+  files = file_list.transpose
+  files.each do |list|
+    list.each do |file|
+      print file.to_s.ljust(24)
+    end
+    print "\n"
   end
-  print "\n"
 end
+show_directories(directory, row)
