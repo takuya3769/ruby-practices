@@ -19,7 +19,7 @@ def show_directories(directory, row)
   files = file_list.transpose
   files.each do |list|
     list.each do |file|
-      print file.to_s.ljust(longest_name.length + padding)
+      print file.to_s.ljust(longest_name.size + padding)
     end
     print "\n"
   end
