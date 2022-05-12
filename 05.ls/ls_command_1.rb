@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 # !/usr/bin/envruby
-
-directory = Dir.glob('*')
 MAX_CLUMN = 3
+require 'optparse'
+params = ARGV.getopts('a')
+directory = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+
 MAXIMUM_FILE = directory.length.to_f
 row = (MAXIMUM_FILE / MAX_CLUMN).ceil
 if (MAX_CLUMN % MAXIMUM_FILE) != 0
