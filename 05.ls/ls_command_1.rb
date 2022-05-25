@@ -3,8 +3,8 @@
 # !/usr/bin/envruby
 MAX_CLUMN = 3
 require 'optparse'
-params = ARGV.getopts('a')
-directory = params['a'] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+params = ARGV.getopts('r')
+directory = params['r'] ? Dir.glob('*').reverse : Dir.glob('*')
 
 MAXIMUM_FILE = directory.length.to_f
 row = (MAXIMUM_FILE / MAX_CLUMN).ceil
@@ -21,7 +21,7 @@ def show_directories(directory, row)
   files = file_list.transpose
   files.each do |list|
     list.each do |file|
-      print file.to_s.ljust(longest_name.size + padding)
+      print file.to_s.ljust(longest_name.length + padding)
     end
     print "\n"
   end
