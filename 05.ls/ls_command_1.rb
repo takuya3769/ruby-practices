@@ -3,6 +3,23 @@
 # !/usr/bin/envruby
 
 MAX_CLUMN = 3
+FILE_TYPE = { 'fifo' => 'p',
+              'characterSpecial' => 'c',
+              'directory' => 'd',
+              'blockSpecial' => 'b',
+              'file' => '-',
+              'link' => 'l',
+              'socket' => 's' }.freeze
+
+ACCESS_PERMISSION = { 0 => '---',
+                      1 => '--x',
+                      2 => '-w-',
+                      3 => '-wx',
+                      4 => 'r--',
+                      5 => 'r-x',
+                      6 => 'rw-',
+                      7 => 'rwx' }.freeze
+
 require 'optparse'
 require 'etc'
 
@@ -10,43 +27,27 @@ params = ARGV.getopts('l')
 dirs = Dir.glob('*')
 
 if params['l']
-  file_type = { 'fifo' => 'p',
-                'characterSpecial' => 'c',
-                'directory' => 'd',
-                'blockSpecial' => 'b',
-                'file' => '-',
-                'link' => 'l',
-                'socket' => 's' }
-
-  access_permission = { 0 => '---',
-                        1 => '--x',
-                        2 => '-w-',
-                        3 => '-wx',
-                        4 => 'r--',
-                        5 => 'r-x',
-                        6 => 'rw-',
-                        7 => 'rwx' }
-
-  total_blocks = 0
+  total_file = []
   dirs.each do |dir|
     fs = File.stat(dir)
-    total_blocks += fs.blocks
+    total_file << fs.blocks
   end
-  puts "total #{total_blocks}"
+  puts "total #{total_file.sum}"
 
   dirs.each do |dir|
     fs = File::Stat.new(dir)
+    total_file << fs.blocks
     link = fs.nlink.to_s
-    user_id = Process.uid
+    user_id = fs.uid
     user_name = Etc.getpwuid(user_id).name
-    group_id = Process.gid
+    group_id = fs.gid
     group_name = Etc.getgrgid(group_id).name
     byte = fs.size.to_s
     files = fs.mode.digits(8).take(3).reverse
-    print (file_type[fs.ftype]).to_s +
-          access_permission[files[0]] +
-          access_permission[files[1]] +
-          access_permission[files[2]]
+    print (FILE_TYPE[fs.ftype]).to_s +
+          ACCESS_PERMISSION[files[0]] +
+          ACCESS_PERMISSION[files[1]] +
+          ACCESS_PERMISSION[files[2]]
     puts "#{link.rjust(2)} #{user_name} #{group_name} #{byte.rjust(4)}  #{fs.mtime.strftime('%_m %e %H:%M')} #{dir}"
   end
 else
