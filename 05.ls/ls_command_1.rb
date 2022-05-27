@@ -26,17 +26,25 @@ require 'etc'
 params = ARGV.getopts('l')
 dirs = Dir.glob('*')
 
-if params['l']
-  total_file = []
-  dirs.each do |dir|
-    fs = File.stat(dir)
-    total_file << fs.blocks
+def show_directories(dirs, row)
+  file_list = dirs.each_slice(row).to_a
+  longest_name = dirs.compact.max_by(&:size)
+  padding = 15
+  files = file_list.transpose
+  files.each do |list|
+    list.each do |file|
+      print file.to_s.ljust(longest_name.length + padding)
+    end
+    print "\n"
   end
-  puts "total #{total_file.sum}"
+end
+
+if params['l']
+  total_file_blocks = dirs.map { |dir| File.stat(dir).blocks }
+  puts "total #{total_file_blocks.sum}"
 
   dirs.each do |dir|
     fs = File::Stat.new(dir)
-    total_file << fs.blocks
     link = fs.nlink.to_s
     user_id = fs.uid
     user_name = Etc.getpwuid(user_id).name
@@ -56,19 +64,6 @@ else
   if (MAX_CLUMN % MAXIMUM_FILE) != 0
     ((MAX_CLUMN * row) - MAXIMUM_FILE).to_i.times do
       dirs.push(nil)
-    end
-  end
-
-  def show_directories(dirs, row)
-    file_list = dirs.each_slice(row).to_a
-    longest_name = dirs.compact.max_by(&:size)
-    padding = 15
-    files = file_list.transpose
-    files.each do |list|
-      list.each do |file|
-        print file.to_s.ljust(longest_name.length + padding)
-      end
-      print "\n"
     end
   end
   show_directories(dirs, row)
