@@ -47,7 +47,7 @@ def show_files(files_data, total_files)
   files_data.each do |file|
     puts "#{file[:line].to_s.rjust(8)} #{file[:word].to_s.rjust(7)} #{file[:byte].to_s.rjust(7)} #{file[:filename]}"
   end
-  unless files_data.size == 1
+  if files_data.size != 1
     puts "#{total_files[:total_line].to_s.rjust(8)} #{total_files[:total_word].to_s.rjust(7)} #{total_files[:total_byte].to_s.rjust(7)} total"
   end
 end
