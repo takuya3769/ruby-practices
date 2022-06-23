@@ -32,7 +32,7 @@ def take_files
 end
 
 def sum_files(files_data)
-  total_files = {
+  {
     total_line: files_data.sum { |lines| lines[:line] },
     total_word: files_data.sum { |words| words[:word] },
     total_byte: files_data.sum { |bytes| bytes[:byte] }
@@ -47,9 +47,9 @@ def show_files(files_data, total_files)
   files_data.each do |file|
     puts "#{file[:line].to_s.rjust(8)} #{file[:word].to_s.rjust(7)} #{file[:byte].to_s.rjust(7)} #{file[:filename]}"
   end
-  if files_data.size != 1
-    puts "#{total_files[:total_line].to_s.rjust(8)} #{total_files[:total_word].to_s.rjust(7)} #{total_files[:total_byte].to_s.rjust(7)} total"
-  end
+  return unless files_data.size != 1
+
+  puts "#{total_files[:total_line].to_s.rjust(8)} #{total_files[:total_word].to_s.rjust(7)} #{total_files[:total_byte].to_s.rjust(7)} total"
 end
 
 def show_lines(files_data, total_files)
