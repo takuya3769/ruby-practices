@@ -39,10 +39,10 @@ def sum_files(taken_files)
 end
 
 def show_files(params, taken_files, summarized_values)
-  params['l'] ? selected_l_option(taken_files, summarized_values) : output_file(taken_files, summarized_values)
+  params['l'] ? show_files_lines_format(taken_files, summarized_values) : show_files_all_format(taken_files, summarized_values)
 end
 
-def output_file(taken_files, summarized_values)
+def show_files_all_format(taken_files, summarized_values)
   taken_files.each do |file|
     puts "#{file[:line].to_s.rjust(8)} #{file[:word].to_s.rjust(7)} #{file[:byte].to_s.rjust(7)} #{file[:filename]}"
   end
@@ -51,7 +51,7 @@ def output_file(taken_files, summarized_values)
   puts "#{summarized_values[:total_line].to_s.rjust(8)} #{summarized_values[:total_word].to_s.rjust(7)} #{summarized_values[:total_byte].to_s.rjust(7)} total"
 end
 
-def selected_l_option(taken_files, summarized_values)
+def show_files_lines_format(taken_files, summarized_values)
   taken_files.each do |file|
     puts "#{file[:line].to_s.rjust(8)} #{file[:filename]}"
   end
